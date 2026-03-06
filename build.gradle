@@ -3,16 +3,22 @@ plugins {
 	id 'org.springframework.boot' version '4.0.3'
 	id 'io.spring.dependency-management' version '1.1.7'
 	// SonarQube Scanner
-	id("org.sonarqube") version "5.1.0.4882"
+	id("org.sonarqube") version "5.0.0.4638"
 	// OpenAPI Generator
 	id("org.openapi.generator") version "7.10.0"
+
+//	id 'com.github.spotbugs' version '4.7.1' apply(flase)
 }
+//apply from: 'gradle/artifactory.gradle'
+apply plugin: 'org.sonarqube'
+//apply plugin: 'org.apringdoc.openapi-gradle-plugin'
 
 sonarqube {
 	properties {
 		property "sonar.projectKey", "spring-docker-app"
 		property "sonar.host.url", "http://localhost:9000"
-		property "sonar.login", System.getenv("SONAR_TOKEN")
+//		property "sonar.login", "sqa_45c21add3598844d8246f6cc5768d7d7463bfb8b"
+
 	}
 }
 openApiGenerate {
