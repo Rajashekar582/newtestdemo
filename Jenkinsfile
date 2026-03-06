@@ -15,7 +15,7 @@ pipeline {
         stage('SonarQube Analysis') {
             environment {
                 SONAR_HOST_URL = 'http://sonarqube:9000'
-                SONAR_TOKEN = credentials('sonar-token')
+                SONAR_TOKEN = credentials('sqa_45c21add3598844d8246f6cc5768d7d7463bfb8b')
             }
             steps {
                 sh "./gradlew sonarqube \
