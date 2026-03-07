@@ -1,15 +1,15 @@
 package com.newtestdemo.demo.exception;
 
-public class EmplyeeNotFound extends RuntimeException {
+public class EmplyeeNotFoundException extends RuntimeException {
 
     private ErrorCode code;
     private String httpRequest;
 
-    public EmplyeeNotFound(String message) {
+    public EmplyeeNotFoundException(String message) {
         super(message);
     }
 
-    public EmplyeeNotFound(ErrorCode code) {
+    public EmplyeeNotFoundException(ErrorCode code) {
         super(code.getMessage());
         this.code = code;
     }

@@ -12,9 +12,14 @@ pipeline {
                 sh 'chmod +x gradlew'
             }
         }
-        stage('Build') {
+        stage('Build ') {
             steps {
-                sh './gradlew clean build -x test'
+                sh './gradlew clean build '
+            }
+        }
+        stage('Test & (static anlys & )Quality Checks @ Code Coverage') {
+            steps {
+                sh './gradlew jacocoTestReport checkstyleMain pmdMain spotbugsMain --stacktrace'
             }
         }
         stage('SonarQube Analysis') {
@@ -30,15 +35,15 @@ pipeline {
                     -Dsonar.login=$SONAR_TOKEN"
             }
         }
-        stage('Generate API Docs') {
+        stage('Build Docker Image') {
             steps {
-                sh './gradlew openApiGenerate'
+                sh 'docker build -t springboot-app:latest .'
             }
         }
-        stage('Archive API Docs') {
-            steps {
-                archiveArtifacts artifacts: 'build/generated/openapi/**/*.yaml', allowEmptyArchive: true
-            }
+    }
+    post {
+        always {
+            archiveArtifacts artifacts: 'build/reports/**/*.html, build/reports/**/*.xml', fingerprint: true
         }
     }
 }

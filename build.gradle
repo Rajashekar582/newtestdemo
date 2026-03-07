@@ -1,11 +1,16 @@
 plugins {
 	id 'java'
+    id "checkstyle"
+    id "pmd"
+    id "jacoco"
 	id 'org.springframework.boot' version '4.0.3'
 	id 'io.spring.dependency-management' version '1.1.7'
 	// SonarQube Scanner
 	id("org.sonarqube") version "7.2.2.6593"
 	// OpenAPI Generator
 	id("org.openapi.generator") version "7.10.0"
+	//soptbugs plugin
+	id "com.github.spotbugs" version "6.0.14"
 
 //	id 'com.github.spotbugs' version '4.7.1' apply(flase)
 }
@@ -13,6 +18,62 @@ plugins {
 apply plugin: 'org.sonarqube'
 //apply plugin: 'org.apringdoc.openapi-gradle-plugin'
 
+//------------spot bugs ---------------------
+spotbugs {
+	toolVersion = "4.8.5"
+	ignoreFailures = false
+	showProgress = true
+}
+
+tasks.withType(com.github.spotbugs.snom.SpotBugsTask) {
+	reports {
+		html.required = true
+		xml.required = false
+	}
+}
+//-----------------
+//-------------checkstyle----------------
+checkstyle {
+	toolVersion = "10.13.0"  // latest stable
+	configDirectory = file("config/checkstyle")
+	showViolations = true
+}
+
+tasks.withType(Checkstyle) {
+	reports {
+		xml.required = true
+		html.required = true
+	}
+}
+//------------------
+//---------------PMD----------------------
+pmd {
+	toolVersion = "6.55.0"  // latest stable
+	ruleSets = []           // disable default rules
+	ruleSetFiles = files("config/pmd/ruleset.xml")
+}
+
+tasks.withType(Pmd) {
+	reports {
+		xml.required = true
+		html.required = true
+	}
+}
+//-------------------
+//-----------------jacoco----------------------
+jacoco {
+	toolVersion = "0.8.12"
+}
+
+jacocoTestReport {
+	dependsOn test // tests are required to run first
+	reports {
+		xml.required = true
+		csv.required = false
+		html.required = true
+	}
+}
+//---------------------
 sonarqube {
 	properties {
 		property "sonar.projectKey", "sonartest-springboot"
@@ -20,16 +81,25 @@ sonarqube {
 		property "sonar.login", "sqp_7d234b38846702783c6f365b061cb5b305c32761"
 	}
 }
+//---------------------------------------------
 openApiGenerate {
 	generatorName = "spring"
 	inputSpec = "$rootDir/src/main/resources/openapi.yaml"
-	outputDir = "$buildDir/generated/openapi"
+	outputDir = "$rootDir/build/generated/openapi"
 	apiPackage = "com.newtestdemo.api"
 	modelPackage = "com.newtestdemo.model"
 	configOptions = [
 			dateLibrary: "java8"
 	]
 }
+//----------------------------------------------
+task codeQuality {
+	group = "verification"
+	description = "Run Checkstyle, PMD, SpotBugs, and tests with coverage"
+	dependsOn 'checkstyleMain', 'pmdMain', 'spotbugsMain', 'test', 'jacocoTestReport'
+}
+//-------------------------
+
 group = 'com.newtestdemo'
 version = '0.0.1-SNAPSHOT'
 description = 'Demo project for Spring Boot'
