@@ -17,9 +17,11 @@ pipeline {
                 sh './gradlew clean build '
             }
         }
+// we can use ./gradlew clean build jacocoTestReport checkstyleMain pmdMain spotbugsMain -x test --stacktrace in a single stage,
+// but separating them allows us to see which part fails more clearly in the Jenkins logs.
         stage('Test & (static anlys & )Quality Checks @ Code Coverage') {
             steps {
-                sh './gradlew jacocoTestReport checkstyleMain pmdMain spotbugsMain --stacktrace'
+                sh './gradlew jacocoTestReport checkstyleMain pmdMain spotbugsMain -x test --stacktrace'
             }
         }
         stage('SonarQube Analysis') {

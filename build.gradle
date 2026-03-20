@@ -1,24 +1,44 @@
 plugins {
 	id 'java'
+	//code quality plugins
     id "checkstyle"
     id "pmd"
     id "jacoco"
-	id 'org.springframework.boot' version '4.0.3'
-	id 'io.spring.dependency-management' version '1.1.7'
-	// SonarQube Scanner
-	id("org.sonarqube") version "7.2.2.6593"
-	// OpenAPI Generator
-	id("org.openapi.generator") version "7.10.0"
-	//soptbugs plugin
 	id "com.github.spotbugs" version "6.0.14"
 
-//	id 'com.github.spotbugs' version '4.7.1' apply(flase)
+
+	//formatting
+	id "com.diffplug.spotless" version "6.21.0"
+
+	// SonarQube Scanner
+	id("org.sonarqube") version "7.2.2.6593"
+
+	// OpenAPI Generator
+	id("org.openapi.generator") version "7.10.0"
+
+	//security
+	id "org.owasp.dependencycheck" version "12.2.0"
+
+
+	id 'org.springframework.boot' version '4.0.3'
+	id 'io.spring.dependency-management' version '1.1.7'
+
 }
+
+
 //apply from: 'gradle/artifactory.gradle'
 apply plugin: 'org.sonarqube'
-//apply plugin: 'org.apringdoc.openapi-gradle-plugin'
+//-----------------OWASP Dependency Check----------------------
+dependencyCheck {
+	failBuildOnCVSS = 7
+	formats = ['HTML', 'JSON']
+	nvd {
+		apiKey = System.getenv('NVD_API_KEY') ?: 'your-api-key-here'
+		validForHours = 24
+	}
+}
 
-//------------spot bugs ---------------------
+//--soptBugs--------------------
 spotbugs {
 	toolVersion = "4.8.5"
 	ignoreFailures = false
@@ -92,7 +112,7 @@ openApiGenerate {
 			dateLibrary: "java8"
 	]
 }
-//----------------------------------------------
+//----------------------------------------------./gradlew codeQuality
 task codeQuality {
 	group = "verification"
 	description = "Run Checkstyle, PMD, SpotBugs, and tests with coverage"
@@ -129,6 +149,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
 	runtimeOnly 'com.mysql:mysql-connector-j'
+	runtimeOnly 'com.h2database:h2'
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:3.0.2'
 
 	testImplementation 'org.springframework.boot:spring-boot-starter-actuator-test'
