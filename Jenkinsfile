@@ -30,7 +30,7 @@ pipeline {
                 SONAR_TOKEN = credentials('sonar-token')
             }
             steps {
-                sh "./gradlew sonar -Dsonar.projectKey=spring-docker-app -Dsonar.sources=src -Dsonar.host.url=$SONAR_HOST_URL"
+                sh "./gradlew sonar -D sonar.projectKey=sonartest-springboot -D sonar.host.url=$SONAR_HOST_URL -D sonar.login=$SONAR_TOKEN --stacktrace"
             }
         }
         stage('Build Docker Image') {

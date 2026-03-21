@@ -94,13 +94,15 @@ jacocoTestReport {
 	}
 }
 //---------------------
-sonarqube {
-	properties {
-		property "sonar.projectKey", "sonartest-springboot"
-		property "sonar.host.url", "http://localhost:9000"
-		property "sonar.login", "sqp_7d234b38846702783c6f365b061cb5b305c32761"
-	}
-}
+//sonarqube {
+//	properties {
+//		property "sonar.projectKey", "sonartest-springboot"
+//		property "sonar.host.url", "http://localhost:9000"
+//		property "sonar.login", "sqp_6929c2c2daaf8d3577403d2d4735de8f88b28dec"
+//		property "sonar.java.binaries", "build/classes/java/main"
+//	}
+//}
+
 //---------------------------------------------
 openApiGenerate {
 	generatorName = "spring"
