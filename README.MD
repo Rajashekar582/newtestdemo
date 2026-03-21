@@ -16,8 +16,10 @@ Snyk
 
 // formating code with spotless
 
-// sonarqube for code quality and security checks
- ./gradlew sonarqube -Dsonar.projectKey=spring-docker-app -Dsonar.sources=src -Dsonar.host.url=$SONAR_HOST_URL -Dsonar.login=$SONAR_TOKEN"
+// sonarqube for code quality and security checks -- working on --  ./gradlew wrapper --gradle-version 8.3
+ ./gradlew sonarqube -D sonar.projectKey=spring-docker-app -D sonar.sources=src -D sonar.host.url=$SONAR_HOST_URL -D sonar.login=$SONAR_TOKEN"
+eg.
+./gradlew sonar -D sonar.projectKey=sonartest-springboot -D sonar.host.url=http://localhost:9000 -D sonar.login=sqp_6929c2c2daaf8d3577403d2d4735de8f88b28dec
 
 // security checks with dependency 
 //Aqua scan
